@@ -1,0 +1,38 @@
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+**/Generated.xcconfig
+**/flutter_export_environment.sh
+**/Flutter.podspec
+
+# Android
+**/local.properties
+**/.gradle/
+**/captures/
+**/*.apk
+**/*.aab
+**/*.iml
+.idea/
+
+# iOS
+**/Pods/
+**/DerivedData/
+**/*.xcworkspace
+!default.xcworkspace
+**/xcuserdata/
+**/.symlinks/
+
+# Secrets — never commit tokens
+.env
+*.jks
+**/key.properties
+**/google-services.json
+
+# OS
+.DS_Store
+Thumbs.db

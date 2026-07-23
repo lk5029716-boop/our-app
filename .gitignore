@@ -1,0 +1,18 @@
+# Secrets
+.env
+**/*token*
+**/*secret*
+
+# Flutter / build
+smartmedia/.dart_tool/
+smartmedia/build/
+smartmedia/.flutter-plugins
+smartmedia/.flutter-plugins-dependencies
+smartmedia/android/.gradle/
+smartmedia/android/local.properties
+smartmedia/ios/Pods/
+smartmedia/ios/.symlinks/
+
+.DS_Store
+.idea/
+*.iml

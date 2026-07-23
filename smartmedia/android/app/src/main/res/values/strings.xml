@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SmartMedia</string>
+    <string name="ime_name">SmartMedia Keyboard</string>
+    <string name="ime_subtype_label">GIF · SmartMedia</string>
+    <string name="engine_active">Engine: Active</string>
+    <string name="search_hint">Search trending GIFs...</string>
+</resources>

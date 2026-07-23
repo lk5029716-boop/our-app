@@ -1,0 +1,5 @@
+# SmartMedia local transcoding command (product-locked)
+# -stream_loop 3: loop short GIF so MP4 feels endless
+# scale even dims: H.264 requirement
+
+ffmpeg -y -stream_loop 3 -i input.gif -c:v libx264 -pix_fmt yuv420p -movflags faststart -vf scale='trunc(iw/2)*2:trunc(ih/2)*2' output.mp4
