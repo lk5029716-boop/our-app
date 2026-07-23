@@ -1,0 +1,101 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-apk:
+    name: Flutter release APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter doctor
+        run: flutter doctor -v
+
+      - name: Ensure Android platform scaffold
+        working-directory: smartmedia
+        run: |
+          # Fill any missing Flutter/Android template files without clobbering ours
+          flutter create . \
+            --project-name smartmedia \
+            --org com.smartmedia \
+            --platforms=android \
+            --no-overwrite 2>/dev/null || \
+          flutter create . \
+            --project-name smartmedia \
+            --org com.smartmedia \
+            --platforms=android
+
+      - name: Restore SmartMedia Android sources
+        run: |
+          # flutter create may regenerate defaults; re-apply product sources from git
+          git checkout -- \
+            smartmedia/android/app/src/main/AndroidManifest.xml \
+            smartmedia/android/app/src/main/java \
+            smartmedia/android/app/src/main/res \
+            smartmedia/android/app/build.gradle \
+            smartmedia/android/build.gradle \
+            smartmedia/android/settings.gradle \
+            smartmedia/android/gradle.properties \
+            smartmedia/lib \
+            smartmedia/pubspec.yaml \
+            || true
+
+      - name: Install dependencies
+        working-directory: smartmedia
+        run: flutter pub get
+
+      - name: Analyze (non-blocking)
+        working-directory: smartmedia
+        continue-on-error: true
+        run: flutter analyze || true
+
+      - name: Build release APK
+        working-directory: smartmedia
+        run: flutter build apk --release --no-tree-shake-icons
+
+      - name: List artifacts
+        run: |
+          ls -lah smartmedia/build/app/outputs/flutter-apk/ || true
+          find smartmedia/build/app/outputs -name '*.apk' -ls || true
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: smartmedia-release-apk
+          path: |
+            smartmedia/build/app/outputs/flutter-apk/*.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload APK to GitHub Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: smartmedia/build/app/outputs/flutter-apk/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
