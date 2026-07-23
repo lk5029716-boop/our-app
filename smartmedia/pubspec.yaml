@@ -22,6 +22,8 @@ dependencies:
   uuid: ^4.5.1
   connectivity_plus: ^6.0.5
   shared_preferences: ^2.3.2
+  # Bundled FFmpeg for GIF→H.264 MP4 transcoding; replaces the remote AAR dependency
+  ffmpeg_kit_flutter_min_gpl: ^6.0.3
 
 dev_dependencies:
   flutter_test:
