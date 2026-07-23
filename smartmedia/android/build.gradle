@@ -8,11 +8,16 @@ allprojects {
 // The original com.arthenica:ffmpeg-kit-min-gpl:6.0-2 artifact was removed from
 // Maven Central on 2025-04-01 and maven.arthenica.com no longer resolves.
 // Substitute with the community-maintained fork on Maven Central.
+// This must be in a subprojects block so it applies to ALL subprojects
+// (including the :ffmpeg_kit_flutter_min_gpl plugin which declares the native dep).
 subprojects {
-    configurations.configureEach {
-        resolutionStrategy.dependencySubstitution {
-            substitute module('com.arthenica:ffmpeg-kit-min-gpl')
-                using module('dev.ffmpegkit-maintained:ffmpeg-kit-min-gpl:6.0.3')
+    configurations.all {
+        resolutionStrategy {
+            eachDependency { details ->
+                if (details.requested.group == 'com.arthenica' && details.requested.name == 'ffmpeg-kit-min-gpl') {
+                    details.useTarget "dev.ffmpegkit-maintained:ffmpeg-kit-min-gpl:6.0.3"
+                }
+            }
         }
     }
 }
