@@ -4,19 +4,6 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-// The original com.arthenica:ffmpeg-kit-min-gpl:6.0-2 artifact was removed from
-// Maven Central on 2025-04-01 and maven.arthenica.com is no longer reachable.
-// Substitute with the community-maintained fork on Maven Central.
-configurations.all {
-    resolutionStrategy {
-        eachDependency { details ->
-            if (details.requested.group == 'com.arthenica' && details.requested.name == 'ffmpeg-kit-min-gpl') {
-                details.useTarget group: 'dev.ffmpegkit-maintained', name: 'ffmpeg-kit-min-gpl', version: '6.0.3'
-            }
-        }
-    }
-}
-
 android {
     namespace "com.smartmedia.app"
     compileSdk 36
